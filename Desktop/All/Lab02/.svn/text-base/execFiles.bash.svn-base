@@ -1,0 +1,38 @@
+#! /bin/bash
+#
+#########################
+#      $Author$
+#      $Date$     
+#      $HeadURL$  
+#      $Revision$   
+#                 
+#########################
+
+if (($# == 0))
+then
+    ls ./c-files/*.c >tempoutput
+    exec 4<tempoutput
+    exec 2>/dev/null
+    while read -a line <&4
+    do
+	FileName=$(echo $line | cut -d'/' -f3)
+	Name=$(echo $FileName | cut -d'.' -f1)
+	gcc -Wall -Werror $line -o a.out
+
+	if (( $? == 0 ))
+	then
+	    echo "Compiling file $FileName... Compilation succeeded."
+	    a.out > $Name.out
+	else
+	    echo "Compiling file $FileName... Error: Compilation failed."
+	fi
+	
+    done
+
+else
+    echo "Usage: ./execFiles.bash"
+    exit 1
+fi
+echo
+rm -f tempoutput
+exit 0

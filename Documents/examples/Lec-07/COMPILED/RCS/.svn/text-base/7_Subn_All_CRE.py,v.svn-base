@@ -1,0 +1,116 @@
+head	1.2;
+access;
+symbols;
+locks
+	ee364:1.2; strict;
+comment	@# @;
+
+
+1.2
+date	2001.04.10.17.32.57;	author ee364;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2001.03.09.14.42.41;	author ee364;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@*** empty log message ***
+@
+text
+@#! /usr/bin/env python
+
+#   $Author: ee364 $
+#     $Date: 2001/03/09 14:42:41 $
+# $Revision: 1.1 $
+
+import sys
+import re
+import string
+import pcre
+
+print """
+   This program expects you to enter a
+simple one line regular expression
+   The program the expects you to enter
+a replacement string.
+   Once both have been entered it promts you for
+strings to be used to searched for the pattern 
+and replaced with the replacement string
+all occurrances will be changed
+The number of changes is also returned
+"""
+
+Error_Flag = 1
+while Error_Flag != 0:
+    print """Enter a regular expression:"""
+    print "RE: ",
+    
+    Reg_Expression = sys.stdin.readline()
+    Reg_Expression = string.replace(Reg_Expression, "\n" ,"", 1)
+   
+    try:
+        Reg_Exp = re.compile(Reg_Expression)
+    except pcre.error:
+        print "Invalid Expression: ", repr(Reg_Expression)
+        print
+        Error_Flag = 1
+    except re.error:
+        print "Invalid Expression: ", repr(Reg_Expression)
+        print
+        Error_Flag = 1
+    else:
+        Error_Flag = 0
+    
+    print """Enter a replacement string"""
+    print "Replacement String: ",
+    
+    Replacement_String = sys.stdin.readline()
+    Replacement_String= string.replace(Replacement_String, "\n" ,"", 1)
+   
+Search_String = ""
+while Search_String != "Quit":
+    print
+    print "Regular Expression:"
+    print repr(Reg_Expression)
+    print "Replacement String:"
+    print repr(Replacement_String)
+    print "Enter a string to be searched"
+    print "replacing all patterns found or"
+    print "Quit to exit this program"
+    print "Search_String: ",
+
+    Search_String = sys.stdin.readline()
+    Search_String = string.replace(Search_String, "\n" ,"", 1)
+    print
+
+    if Search_String == "Quit":
+        sys.exit(0)
+
+    New_String = Reg_Exp.subn(Replacement_String, Search_String)
+
+    print "New_String:", repr(New_String)
+
+sys.exit(0)
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d3 2
+a4 2
+#   $Author: mowle $
+#     $Date: 2001/03/07 16:48:28 $
+d35 4
+@

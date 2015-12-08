@@ -1,0 +1,44 @@
+head	1.1;
+access;
+symbols;
+locks
+	ee364:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2001.10.26.16.27.50;	author ee364;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#! /usr/bin/env python
+
+#     $Author$
+#       $Date$
+#   $Revision$
+
+from Tkinter import *
+import sys
+
+Root = Tk()
+Root.title(sys.argv[0])
+
+def Call_Back(Event):
+     print "Clicked at", Event.x, Event.y
+
+My_Frame = Frame(Root, width=400, height=200)
+My_Frame.bind("<Button-1>", Call_Back)
+My_Frame.pack()
+
+Root.mainloop()
+@

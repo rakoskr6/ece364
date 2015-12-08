@@ -1,0 +1,64 @@
+head	1.1;
+access;
+symbols;
+locks
+	ee364:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2001.10.26.16.27.50;	author ee364;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#! /usr/bin/env python
+
+#     $Author$
+#       $Date$
+#   $Revision$
+
+from Tkinter import *
+import sys
+import tkSimpleDialog
+
+class Status_Bar(Frame):
+    def __init__ (Self, Master):
+        Frame.__init__(Self, Master)
+        Self.label = Label(Self, width=40)
+        Self.label.pack(fill=X)
+
+    def Set(Self, Format, *args):
+        Self.label.config(text=Format % args)
+        Self.label.update_idletasks()
+
+    def Clear(Self):
+        Self.label.config(text="")
+        Self.label.update_idletasks()
+
+Root = Tk()
+
+Status = Status_Bar(Root)
+Status.pack(side=BOTTOM, expand=YES, fill=BOTH)
+
+Data = ""
+while Data != "Quit":
+    try:
+        Data = tkSimpleDialog.askstring("Text Input Box", 
+                "Type Anything\nQuit to Stop")
+        Status.Clear()
+        Status.Set("%s", Data)
+    except:
+        sys.exit(0)
+
+Root.mainloop()
+@

@@ -1,0 +1,323 @@
+#! /usr/bin/env python3.4
+#
+#########################
+#      $Author: ee364f03 $
+#      $Date: 2015-10-20 17:13:40 -0400 (Tue, 20 Oct 2015) $
+#      $HeadURL: svn+ssh://ece364sv@ecegrid-thin1/home/ecegrid/a/ece364sv/svn/F15/students/ee364f03/Lab07/Registration.py $
+#      $Revision: 82839 $
+#
+#########################
+
+import glob
+import string
+import re
+import copy
+from pprint import pprint as pp
+
+class Course:
+    def __init__(self, courseID, fst, snd, final):
+        self.courseID = courseID
+        self.fst = fst
+        self.snd = snd
+        self.final = final
+        self.total = .25 * fst + .25 * snd + .50 *final
+        if self.total >= 90:
+            self.letter = 'A'
+        elif self.total >= 80:
+            self.letter = 'B'
+        elif self.total >= 70:
+            self.letter = 'C'
+        elif self.total >= 60:
+            self.letter = 'D'
+        else:
+            self.letter = 'F'
+
+    def __str__(self):
+        return self.courseID + ': (' + "{0:.2f}".format(self.fst) + ', ' + "{0:.2f}".format(self.snd) + ', ' + "{0:.2f}".format(self.final) + ') = (' + "{0:.2f}".format(self.total) + ', ' + self.letter + ')'
+
+    def getLetterGrade(self):
+        return self.letter
+
+
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.courses = {}
+
+    def addCourse(self, course):
+        self.courses[course.courseID] = course
+
+    def __str__(self):
+        ordered = []
+        s = self.name + ': '
+        for item in self.courses:
+            ordered.append(item)
+        ordered.sort()
+        i = len(ordered)
+        for item in ordered:
+            s += '(' + item + ': ' + self.courses[item].letter + ')'
+            if i > 1:
+                s += ', '
+            i -= 1
+        return s
+
+    def generateTranscript(self):
+        ordered = []
+        s = self.name + '\n'
+
+        for item in self.courses:
+            ordered.append(item)
+        ordered.sort()
+        i = len(ordered)
+        for item in ordered:
+            s += str(self.courses[item])
+            if i > 1:
+                s += '\n'
+            i -= 1
+
+
+        return s
+
+
+class School:
+    def __init__(self,name):
+        self.name = name
+        self.students = {}
+
+    def __str__(self):
+        s = self.name + ': '
+        i = 0
+        ordered = []
+
+        for item in self.students:
+            i += 1
+            ordered.append(item)
+        ordered.sort()
+
+        s += str(i) + ' Students' + '\n'
+
+        for item in ordered:
+            s += str(self.students[item].name)
+            if i > 1:
+                s += '\n'
+            i -= 1
+        return s
+
+    def addStudents(self, student):
+        self.students[student.name] = student
+
+
+    def loadData(self, filename):
+        with open(filename,'r') as myFile:
+            lines = myFile.readlines()
+        s = ''
+        for line in lines:
+            s += str(line)
+        s = s.split('\n\n')
+
+        for item in s:
+
+            item2 = item.split('\n')
+            tempStudent = Student(item2[0])
+
+            i = 0
+            for item3 in item2:
+                if i > 1:
+                    item3 = item3.split(',')
+                    item4 = item3[0].split(':')
+                    first = item4[0].strip()
+                    second = item4[1].strip()
+                    third = item3[1].strip()
+                    fourth = item3[2].strip()
+                    #print(first + ', ' + second + ', ' + third + ', ' + fourth)
+                    tempCourse = Course(first, float(second), float(third), float(fourth))
+                    tempStudent.addCourse(tempCourse)
+                i += 1
+            self.addStudents(tempStudent)
+
+
+    def saveData(self, filename):
+        s = ''
+
+        ordered = []
+        for item in self.students:
+            ordered.append(item)
+        ordered.sort()
+
+        i = len(ordered)
+        for item in ordered:
+            s += self.students[item].generateTranscript()
+            if i > 1:
+                s += '\n\n'
+            i -= 1
+        with open(filename,'w') as myFile:
+            myFile.write(s)
+
+
+
+
+if __name__ == '__main__':
+
+    test = Course('ece364',80.00,95.00,99.00)
+    print(test)
+    test2 = Course('ece362',70.00,95.80,65.99)
+    print(test2)
+    print()
+
+    test3 = Student('Kyle Rakos')
+    test3.addCourse(test)
+    test3.addCourse(test2)
+    print(test3)
+    print()
+
+    print(test3.generateTranscript())
+    print()
+
+    test4 = School('Purdue')
+    test4.loadData('school_data_source.txt')
+
+    test4.saveData('testfile.txt')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

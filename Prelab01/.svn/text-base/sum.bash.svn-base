@@ -1,0 +1,19 @@
+#! /bin/bash
+#
+#########################
+#      $Author$
+#      $Date$     
+#      $HeadURL$  
+#      $Revision$   
+#                 
+#########################
+
+let Sum=0
+for ((I = $#; I > 0; I--))
+do
+	((Sum=$1+Sum))
+	shift
+done
+
+echo $Sum
+exit 0

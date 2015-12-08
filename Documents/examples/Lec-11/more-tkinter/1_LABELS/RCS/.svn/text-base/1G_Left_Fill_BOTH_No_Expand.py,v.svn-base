@@ -1,0 +1,49 @@
+head	1.1;
+access;
+symbols;
+locks
+	ee364:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2001.10.26.16.30.05;	author ee364;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#! /usr/bin/env python
+
+#     $Author$
+#       $Date$
+#   $Revision$
+
+# The script keeps the button on the left side of
+# the window when expanded and fills in both X and Y direction
+# No expand option
+
+# Note:  Expands only in Y direction
+
+from Tkinter import *
+import sys
+
+Root = Tk()
+Root.title(sys.argv[0])
+
+My_Label = Label(Root, text = '1G: Hello EE 364 Students',
+                       fg="Blue", # foreground color
+                       bg="light green", # background color
+                       font=("courier", 24, "bold"))
+My_Label.pack(side=LEFT, fill=BOTH)
+Root.mainloop()
+
+@

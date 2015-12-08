@@ -1,0 +1,191 @@
+http://coding.derkeiler.com/Archive/Python/comp.lang.python/2007-07/msg01646.html
+
+Re: Pass by reference or by value?
+
+    * From: sturlamolden <sturlamolden@xxxxxxxx>
+    * Date: Fri, 13 Jul 2007 20:58:55 -0700
+
+On Jul 13, 9:10 pm, Robert Dailey <rcdai...@xxxxxxxxx> wrote:
+
+    I noticed in Python all function parameters seem to be passed by
+    reference. This means that when I modify the value of a variable of a
+    function, the value of the variable externally from the function is
+    also modified.
+
+
+
+Pass-by-value and pass-by-reference usually refer to the semantics
+used in C and Fortran, respectively.
+
+
+Here is an example showing the distinction between the 'pass-by-value'
+semantics of C and the 'pass-by-reference' semantics of Fortran:
+
+
+In C you can pass pointers, but it is still a pure 'pass-by-value'
+semantics. The pointer itself is passed by value (which is an
+address). What that means, is that the function receives a copy of the
+argument used in the call:
+
+int a = 1;
+foo(&a);
+bar(&a);
+
+void foo(int *a)
+{
+a = (int*) 0; /* no side effect */
+}
+
+void bar(int *a)
+{
+*a = 0; /* side effect, but a is still passed by value */
+}
+
+Now take a look at how the functions foo and bar are called. They both
+have the same signature,
+void ()(* int). Thus they must be called equivalently. But still one
+produces a side-effect and the other does not. Often in C litterature
+you can see what happens in the function bar called 'pass-by-
+reference'. But that is very incorrect, C never passes anything by
+reference.
+
+'Pass-by-value' is thus equivalent to 'pass-a-copy'.
+
+
+In Fortran you can only pass references.
+
+integer(4) :: a
+a = 1
+call bar(a)
+
+subroutine bar(a)
+integer(4) :: a
+a = 0 ! side-effect
+end subroutine
+
+That means, when a variable is used to call a function, the function
+receives a pointer to the actual argument, not a local copy. That is
+very different from C's copy-passing behaviour.
+
+C++ can pass-by-value and pass-by-reference:
+
+int a = 1;
+foo(&a); // no side-effect
+bar(&a); // side-effect
+foo2(a); // no side-effect
+bar2(a); // side-effect!!!
+
+void foo(int *a) // pass-by-value
+{
+a = (int*) 0; // no side effect
+}
+
+void bar(int *a) // pass-by-value
+{
+*a = 0; // side effect, but a is still passed by value
+}
+
+
+void foo2(int a) // pass-by-value
+{
+a = 0; // no side effect !!!
+}
+
+
+void bar2(int &a) // pass-by-reference
+{
+a = 0; // side effect !!!
+}
+
+The C++ example clearly shows what we mean by pass-by-reference. It
+seems when we call the function bar2 that we give it the value of a,
+when we in fact give it a reference to a. That is the same thing that
+happens in Fortran.
+
+What it all boils down to is this:
+
+
+Local copies are made in the 'pass-by-value' semantics.
+Local copies are not made in the 'pass-by-reference' semantics.
+
+
+
+Now that we have defined 'pass-by-value' and 'pass-by-reference'
+precisely, it is time to examine what Python does.
+
+It turns out that Python neither works like C nor like Fortran.
+Rather, Python works like LISP. That is:
+
+
+Python names are pointers bound to values.
+Python always pass pointers to values.
+Python never pass local copies.
+Function arguments are referenced by names in the function's local
+namespace.
+Names referencing function arguments can be rebound in the local
+scope.
+
+
+        From this you might think that Python does pass-by-reference. Afterall
+
+it does not create local copies. But as names can be rebound in the
+local scope, function calls in Python and Fortran behave very
+differently.
+
+That is:
+
+a = 1 # a points to an int(1)
+foobar(a)
+# a still points to an int(1)
+
+def foobar(a):
+a = 0 # rebinds a locally, produces no side-effect
+# in Fortran this would have produced a side-effect
+
+
+Now, examine this code sniplet:
+
+a = 1 # a points to an int(1)
+foobar(a)
+# a still points to an int(1) as an int is immutable
+a = [1, 2, 3] # rebinds a, a points to a mutable type
+foobar(a)
+# a points to [1,2,3,1,2,3]
+
+def foobar(a):
+a *= 2 # rebinds a only if a points to an immutable type,
+# otherwise the value pointed to by a is changed
+
+
+If you take a careful look at these examples, you should be able to
+figure out what Python does.
+
+Python does 'pass-by-reference' in the sense that it always pass
+pointers.
+
+Python does 'pass-by-value' in the sense that names has a local scope
+and can be rebound in the local scope.
+
+The correct statement would be to say that Python does neither pass-by-
+reference nor pass-by-value in the conventional meaning of the terms.
+
+Rather Python does 'pass-as-lisp'.
+
+
+
+Sturla Molden
+
+
+
+P.S. You could think of Python as a Java only having reference types.
+What makes the semantics of Java and C# 'pass-by-value' like C, is the
+fact that they make copies of value-types when passed to a function. A
+reference type is also passed by value, in this case the value of the
+reference is passed. Python does not have value types. But Python does
+have immutable types. An int is an immutable type in Python and a
+value type in Java. What happens when Python and Java calls a function
+with an int as argument is very different. Java makes a copy of the
+int and passes that. Python passes a pointer to the int. But as an int
+is immutable in Python, it may look like Python passes ints 'by value'
+when in fact it never creates a local copy.
+

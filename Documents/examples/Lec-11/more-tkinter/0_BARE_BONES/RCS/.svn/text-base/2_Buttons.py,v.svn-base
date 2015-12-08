@@ -1,0 +1,48 @@
+head	1.1;
+access;
+symbols;
+locks
+	ee364:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2001.10.26.16.27.50;	author ee364;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#! /usr/bin/env python
+
+#     $Author$
+#       $Date$
+#   $Revision$
+
+# A couple of buttons in a window
+
+from Tkinter import *
+
+def Print_Message():
+    print "EE 364 is a great class!"
+
+
+Root = Tk()
+
+Quit_Button = Button(Root, text="QUIT",
+                     command=Root.quit)
+Quit_Button.pack(side=LEFT)
+Hi_Button = Button(Root, text="Push Me",
+                     command=Print_Message)
+Hi_Button.pack(side=LEFT)
+
+Root.mainloop()
+@

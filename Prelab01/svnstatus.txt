@@ -1,0 +1,2 @@
+?       svncheck.bash
+?       svnstatus.txt

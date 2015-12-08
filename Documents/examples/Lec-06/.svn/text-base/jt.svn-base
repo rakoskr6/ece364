@@ -1,0 +1,17 @@
+#! /usr/bin/env python
+
+def foobar(a):
+  a *= 2
+  print "foobar: ", a
+a=1
+foobar(a)
+a=1
+foobar(a)
+a=[1,2,3]
+foobar(a)
+print a
+
+b=[1,2,3]
+b*=2
+print b
+

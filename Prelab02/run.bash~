@@ -1,0 +1,53 @@
+#! /bin/bash
+#
+#########################
+#      $Author: ee364f03 $
+#      $Date: 2015-09-07 12:17:20 -0400 (Mon, 07 Sep 2015) $     
+#      $HeadURL: svn+ssh://ece364sv@ecegrid-thin1/home/ecegrid/a/ece364sv/svn/F15/students/ee364f03/Prelab02/yards.bash $  
+#      $Revision: 81482 $   
+#                 
+#########################
+clear
+if (($# == 1))
+then
+    if [[ -r $1 ]]
+    then
+	((Largest=0))
+	exec 4< $1
+	while read -a line <&4
+	do
+	    let Total=0
+	    let TotalVar=0
+
+	    for ((i=1; i<${#line[*]}; i++))
+	    do
+		((Total=$Total+${line[$i]}))
+	    done
+	    ((Average=$Total/(${#line[*]}-1)))
+	    
+	    for ((i=1; i<${#line[*]}; i++))
+	    do
+		((TotalVar=$TotalVar+(((${line[$i]})-$Average)**2)))
+	    done
+	    ((Var=TotalVar/(${#line[*]}-1)))
+	    
+	    if (( $Average >= $Largest ))
+	    then
+		((Largest=$Average))
+	    fi
+
+	 echo "${line[0]} schools averaged $Average yards receiving with a variance of $Var"
+	done 
+	echo "The largest average yardage was $Largest"
+
+	      
+
+    else
+	echo "Error: $1 is not readable"
+	exit 1
+    fi
+
+else
+    echo "Usage: yards.bash <filename>"
+exit 0
+fi

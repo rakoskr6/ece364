@@ -1,0 +1,11 @@
+#! /usr/bin/env ksh
+
+#     $Author: ee364 $
+#       $Date: 2001/10/26 16:29:01 $
+#   $Revision: 1.1 $
+
+List=$(ls 2*.py)
+for I in ${List}
+do
+  ${I} &
+done
